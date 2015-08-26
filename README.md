@@ -11,15 +11,16 @@ UGG Doc and Code Repository
   ######
   Documentation Folder Structure
     1. Projektauftrag
-        1.1 Mockups
+        * Mockups
     2. Pflichtenheft / Lastenheft
-        2.1 Umfang
+        * Umfang
     3. Organisation
     4. PSP
     5. Entwicklung
     6. Issue Register
     7. Risk Register
     8. Prototypen
-    9. Anhang
-        9.1 Statusberichte
-        9.2 Korrespondenz
+    9. Architektur
+    10. Anhang
+        1. Statusberichte
+        2. Korrespondenz
