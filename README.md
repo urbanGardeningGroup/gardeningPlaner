@@ -11,7 +11,7 @@ UGG Doc and Code Repository
   ######
   Documentation Folder Structure
     1. Projektauftrag
-        * Mockups
+        * [Mockups](/docs/01 Projektauftrag/01 Mockups/MY GARDEN.pdf)
     2. Pflichtenheft / Lastenheft
         * Umfang
     3. Organisation
