@@ -6,3 +6,9 @@
 
 # Excel Backup File
 *.xlk
+
+# Soruce Code Development Excludes
+target
+src/main/webapp/VAADIN/widgetsets
+.idea
+vaadin-jpa-application.iml
