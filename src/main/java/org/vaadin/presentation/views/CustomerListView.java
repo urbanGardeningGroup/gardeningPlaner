@@ -6,10 +6,10 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import org.vaadin.presentation.AppUI;
 import org.vaadin.backend.CustomerService;
 import org.vaadin.backend.domain.Customer;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
-import org.vaadin.presentation.AppUI;
 import org.vaadin.presentation.ScreenSize;
 import org.vaadin.presentation.views.CustomerEvent.Type;
 import org.vaadin.viritin.button.MButton;

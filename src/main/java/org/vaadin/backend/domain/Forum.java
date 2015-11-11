@@ -1,20 +1,30 @@
+package org.vaadin.backend.domain;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Forum {
-	  protected List<Comment> _comments;
+    @Version
+    int version;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-      public List<Comment> getComments()
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "forum")
+    private List<Comment> comments;
+
+    public List<Comment> getComments()
+    {
+          return comments;
+    }
+
+    public void setComments(List<Comment>  comments)
       {
-          return _comments;
+          this.comments = comments;
       }
 
-      public void setComments(List<Comment>  comments)
+    public void addComment(Comment comment)
       {
-          _comments = comments;
-      }
-
-      public void addComment(Comment comment)
-      {
-          _comments.add(comment);
+          comments.add(comment);
       }
 }

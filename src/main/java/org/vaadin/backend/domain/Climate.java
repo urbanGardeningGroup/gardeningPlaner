@@ -1,3 +1,4 @@
+package org.vaadin.backend.domain;
 
 public enum Climate {
     Continental,

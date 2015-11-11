@@ -1,26 +1,42 @@
+package org.vaadin.backend.domain;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Field {
-	 protected double _size;
-     protected List<Plant> _plants;
 
-     public void setSize(double size)
+    @Version
+    int version;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Column
+	private double size;
+
+    @Column
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "field")
+    private List<Plant> plants;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Garden garden;
+
+    public void setSize(double size)
      {
-         _size = size;
+         this.size = size;
      }
 
-     public double getSize()
+    public double getSize()
      {
-         return _size;
+         return size;
      }
 
-     public void setPlants(List<Plant> plants)
+    public void setPlants(List<Plant> plants)
      {
-         _plants = plants;
+         this.plants = plants;
      }
 
-     public List<Plant> getPlants()
+    public List<Plant> getPlants()
      {
-         return _plants;
+         return plants;
      }
 }

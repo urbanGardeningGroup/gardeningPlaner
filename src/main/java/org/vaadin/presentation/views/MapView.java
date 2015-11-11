@@ -3,6 +3,7 @@ package org.vaadin.presentation.views;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.vaadin.backend.domain.Customer;
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LMarker;
 import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
@@ -11,7 +12,6 @@ import org.vaadin.addon.leaflet.LeafletClickListener;
 import org.vaadin.addon.leaflet.control.LZoom;
 import org.vaadin.addon.leaflet.shared.ControlPosition;
 import org.vaadin.backend.CustomerService;
-import org.vaadin.backend.domain.Customer;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
 import org.vaadin.viritin.label.Header;
 import org.vaadin.viritin.layouts.MVerticalLayout;

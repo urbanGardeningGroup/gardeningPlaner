@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.vaadin.backend.CustomerService;
-import org.vaadin.backend.domain.Customer;
 import org.vaadin.backend.domain.CustomerStatus;
 import org.vaadin.backend.domain.Gender;
+import org.vaadin.backend.CustomerService;
+import org.vaadin.backend.domain.Customer;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
 import org.vaadin.presentation.ScreenSize;
 import org.vaadin.viritin.label.Header;

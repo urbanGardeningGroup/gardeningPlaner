@@ -1,48 +1,65 @@
+package org.vaadin.backend.domain;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Garden {
-	 protected GardenType _gardenType;
-     protected Climate _climate;
-     protected List<Field> _fields;
-     protected double _size;
 
-     public void setClimate(Climate climate)
+    @Version
+    int version;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Enumerated
+	private GardenType gardenType;
+    @Enumerated(EnumType.STRING)
+    private Climate climate;
+    @OneToMany(mappedBy = "garden", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Field> fields;
+    @Column
+    private double size;
+    @OneToOne(mappedBy = "garden", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private User owner;0
+    @ManyToMany(mappedBy = "supportedGarden", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<User> supporters;
+
+    public void setClimate(Climate climate)
      {
-         _climate = climate;
+         this.climate = climate;
      }
 
-     public Climate getClimate()
+    public Climate getClimate()
      {
-         return _climate;
+         return this.climate;
      }
 
-     public void setFields(List<Field> fields)
+    public void setFields(List<Field> fields)
      {
-         _fields = fields;
+         this.fields = fields;
      }
 
-     public List<Field> getFields()
+    public List<Field> getFields()
      {
-         return _fields;
+         return fields;
      }
 
-     public void setGardenType(GardenType gardenType)
+    public void setGardenType(GardenType gardenType)
      {
-         _gardenType = gardenType;
+         this.gardenType = gardenType;
      }
 
-     public GardenType getGardenType()
+    public GardenType getGardenType()
      {
-         return _gardenType;
+         return gardenType;
      }
 
-     public void setSize(double size)
+    public void setSize(double size)
      {
-         _size = size;
+         this.size = size;
      }
 
-     public double getSize()
+    public double getSize()
      {
-         return _size;
+         return size;
      }
 }

@@ -1,63 +1,72 @@
-import java.util.Date;
+package org.vaadin.backend.domain;
 
- public class User
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+public class User
     {
-        protected String _name;
-        protected String _firstname;
-        protected String _nickname;
-        protected String _email;
-        protected String _password;
-        protected Boolean  _isValidated;
-        protected Date _accountDeletedOn;
+        private String name;
+        private String firstName;
+        private String nickname;
+        private String email;
+        private String password;
+        private Boolean isValidated;
+        private Date accountDeletedOn;
+        @OneToOne(mappedBy = "owner")
+        private Garden garden;
+        @ManyToMany(mappedBy = "supporters", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        private List<Garden> supportedGarden;
 
         public void setName(String name)
         {
-            _name = name;
+            this.name = name;
         }
         public String getName()
         {
-            return _name;
+            return name;
         }
         
-        public void setFirstname(String firstname)
+        public void setFirstName(String firstName)
         {
-            _firstname = firstname;
+            this.firstName = firstName;
         }
-        public String getFirstname()
+        public String getFirstName()
         {
-            return _firstname;
+            return firstName;
         }
 
         public void setNickname(String nickname)
         {
-            _nickname = nickname;
+            this.nickname = nickname;
         }
         public String getNickname()
         {
-            return _nickname;
+            return nickname;
         }
 
         public void setEmail(String email)
         {
-            _email = email;
+            this.email = email;
         }
         public String getEmail()
         {
-            return _email;
+            return email;
         }
 
         public void setPassword(String password)
         {
-            _password = password;
+            this.password = password;
         }
         public String getPassword()
         {
-            return _password;
+            return password;
         }
 
         public Boolean isValidated()
         {
-            return _isValidated;
+            return isValidated;
         }
 
         public Boolean isDeleted()
