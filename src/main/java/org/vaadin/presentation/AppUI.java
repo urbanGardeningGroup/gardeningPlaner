@@ -27,7 +27,7 @@ import org.vaadin.cdiviewmenu.ViewMenuUI;
 @Theme("valo")
 @Title("Garden Designer")
 @Widgetset("AppWidgetset")
-@Push(PushMode.MANUAL)
+//@Push(PushMode.AUTOMATIC)
 public class AppUI extends ViewMenuUI {
 
     /**

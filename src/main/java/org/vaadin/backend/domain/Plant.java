@@ -1,28 +1,41 @@
 package org.vaadin.backend.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
+@NamedQueries({    @NamedQuery(
+        name = "Plant.findAll",
+        query = "SELECT p FROM Plant p"
+)})
 @Entity
-public class Plant {
+@MappedSuperclass
+public class Plant extends TimestampedEntity implements Serializable {
 
     @Version
     int version;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    @Column
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     private PlantStatus status;
-    @Column
     private double height;
 
-    @OneToOne(mappedBy = "plant")
+    @OneToOne()
     private Seed seed;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Field field;
     @ManyToMany(mappedBy = "threatenedPlants")
     private List<Pest> pests;
 
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public Long getId()
+    {
+        return id;
+    }
 
     public PlantStatus getStatus() {
         return status;

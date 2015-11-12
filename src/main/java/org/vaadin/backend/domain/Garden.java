@@ -1,27 +1,41 @@
 package org.vaadin.backend.domain;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
+@NamedQueries({    @NamedQuery(
+        name = "Garden.findAll",
+        query = "SELECT g FROM Garden g"
+)})
 @Entity
-public class Garden {
+public class Garden extends TimestampedEntity implements Serializable {
 
     @Version
     int version;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     @Enumerated
 	private GardenType gardenType;
     @Enumerated(EnumType.STRING)
     private Climate climate;
     @OneToMany(mappedBy = "garden", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Field> fields;
-    @Column
     private double size;
     @OneToOne(mappedBy = "garden", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private User owner;0
+    private User owner;
     @ManyToMany(mappedBy = "supportedGarden", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<User> supporters;
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public Long getId()
+    {
+        return id;
+    }
 
     public void setClimate(Climate climate)
      {

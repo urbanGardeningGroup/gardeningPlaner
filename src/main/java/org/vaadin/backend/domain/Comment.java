@@ -14,18 +14,19 @@ public class Comment extends TimestampedEntity implements Serializable{
     @Version
     int version;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     @OneToOne
-    private int parentId;
+    private Comment parentComment;
     @ManyToOne
     private Forum forum;
-    @OneToOne
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
     @NotNull(message = "please set a title")
     private String title;
     @NotNull(message = "please provide content")
     private String content;
+
 
     public Forum getForum() {
         return forum;
@@ -35,34 +36,34 @@ public class Comment extends TimestampedEntity implements Serializable{
         this.forum = forum;
     }
 
-    public void setId(int id)
+    public void setId(Long id)
      {
-         id = id;
+         this.id = id;
      }
 
-    public int getId()
+    public Long getId()
      {
          return id;
      }
 
-    public void setParentId(int parentId)
+    public void setParentId(Comment parentComment)
     {
-        this.parentId = parentId;
+        this.parentComment = parentComment;
     }
 
-     public int getParentId()
+     public Comment getParentId()
     {
-        return parentId;
+        return parentComment;
     }
 
-     public void setUserId(int userId)
+     public void setUser(User userId)
      {
-         this.userId = userId;
+         this.user = userId;
      }
 
-     public int getUserId()
+     public User getUser()
      {
-         return userId;
+         return user;
      }
 
      public void setContent(String content)

@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -15,16 +16,20 @@ public abstract class TimestampedEntity {
     /**
      * Update date
      */
+    @Column(name = "updatedAt", insertable = false, updatable = true)
+    @NotNull
     private Timestamp updatedAt;
     /**
      * Creation date
      */
+    @Column(name = "createdAt", insertable = true, updatable = false)
+    @NotNull
     private Timestamp createdAt;
 
     /**
      * @return the updatedAt
      */
-    @Column(name = "updatedAt", insertable = false, updatable = true)
+
     Timestamp getUpdatedAt() {
         return updatedAt;
     }
@@ -40,7 +45,7 @@ public abstract class TimestampedEntity {
     /**
      * @return the createdAt
      */
-    @Column(name = "createdAt", insertable = true, updatable = false)
+
     Timestamp getCreatedAt() {
         return createdAt;
     }
