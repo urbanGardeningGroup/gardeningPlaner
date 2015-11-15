@@ -1,19 +1,12 @@
 package org.vaadin.backend;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.vaadin.backend.domain.Customer;
-import org.vaadin.backend.domain.CustomerStatus;
 import org.vaadin.backend.domain.Forum;
-import org.vaadin.backend.domain.Gender;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 @Stateless
 public class ForumService {
@@ -49,12 +42,12 @@ public class ForumService {
      */
     public void ensureTestData() {
         if (findAll().isEmpty()) {
-           //TODO: Ensure Testdata
+            //TODO: Ensure Testdata
         }
     }
 
     public void resetTestData() {
-        if(!findAll().isEmpty()) {
+        if (!findAll().isEmpty()) {
             entityManager.createQuery("DELETE FROM Forum f WHERE f.id > 0").
                     executeUpdate();
         }

@@ -7,15 +7,18 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
-import org.vaadin.backend.CustomerService;
-import org.vaadin.backend.domain.Customer;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import org.vaadin.backend.FieldService;
+import org.vaadin.backend.domain.Field;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
 import org.vaadin.presentation.AppUI;
 import org.vaadin.presentation.ScreenSize;
-import org.vaadin.presentation.events.CustomerEvent;
-import org.vaadin.presentation.events.CustomerEvent.Type;
-import org.vaadin.presentation.views.forms.CustomerForm;
+import org.vaadin.presentation.events.FieldEvent;
+import org.vaadin.presentation.events.FieldEvent.Type;
+import org.vaadin.presentation.views.forms.FieldForm;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.fields.MTable;
 import org.vaadin.viritin.fields.MValueChangeEvent;
@@ -30,45 +33,45 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 /**
- * A view that lists Customers in a Table and lets user to choose one for
+ * A view that lists Fields in a Table and lets user to choose one for
  * editing. There is also RIA features like on the fly filtering.
  */
-@CDIView("customers")
-@ViewMenuItem(icon = FontAwesome.USERS)
-public class CustomerListView extends MVerticalLayout implements View {
+@CDIView("field")
+@ViewMenuItem(icon = FontAwesome.BEER, order = 2)
+public class FieldView extends MVerticalLayout implements View {
 
     @Inject
-    CustomerForm customerEditor;
+    FieldForm fieldEditor;
     // Introduce and configure some UI components used on this view
-    MTable<Customer> customerTable = new MTable(Customer.class).withFullWidth().
+    MTable<Field> fieldTable = new MTable(Field.class).withFullWidth().
             withFullHeight();
-    MHorizontalLayout mainContent = new MHorizontalLayout(customerTable).
+    MHorizontalLayout mainContent = new MHorizontalLayout(fieldTable).
             withFullWidth().withMargin(false);
     TextField filter = new TextField();
-    Header header = new Header("Customers").setHeaderLevel(2);
+    Header header = new Header("Fields").setHeaderLevel(2);
     Button addButton = new MButton(FontAwesome.EDIT,
             new Button.ClickListener() {
 
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
-                    addCustomer();
+                    addField();
                 }
             });
     @Inject
-    private CustomerService service;
+    private FieldService service;
 
     @PostConstruct
     public void init() {
 
         /*
-         * Add value change listener to table that opens the selected customer into
+         * Add value change listener to table that opens the selected Fields into
          * an editor.
          */
-        customerTable.addMValueChangeListener(new MValueChangeListener<Customer>() {
+        fieldTable.addMValueChangeListener(new MValueChangeListener<Field>() {
 
             @Override
-            public void valueChange(MValueChangeEvent<Customer> event) {
-                editCustomer(event.getValue());
+            public void valueChange(MValueChangeEvent<Field> event) {
+                editField(event.getValue());
             }
         });
 
@@ -78,11 +81,11 @@ public class CustomerListView extends MVerticalLayout implements View {
          * events are sent to the server when e.g. user holds a tiny pause
          * while typing or hits enter.
          * */
-        filter.setInputPrompt("Filter customers...");
+        filter.setInputPrompt("Filter Fields...");
         filter.addTextChangeListener(new FieldEvents.TextChangeListener() {
             @Override
             public void textChange(FieldEvents.TextChangeEvent textChangeEvent) {
-                listCustomers(textChangeEvent.getText());
+                listFields(textChangeEvent.getText());
             }
         });
 
@@ -105,7 +108,7 @@ public class CustomerListView extends MVerticalLayout implements View {
                     }
                 });
 
-        listCustomers();
+        listFields();
     }
 
     /**
@@ -150,29 +153,30 @@ public class CustomerListView extends MVerticalLayout implements View {
      */
     private void adjustTableColumns() {
         if (ScreenSize.getScreenSize() == ScreenSize.LARGE) {
-            customerTable.setVisibleColumns("firstName", "lastName", "email",
-                    "status");
-            customerTable.setColumnHeaders("First name", "Last name", "Email",
-                    "Status");
+            fieldTable.setVisibleColumns("fieldName");
+            fieldTable.setColumnHeaders("Field Name");
+            // todo: implement LARGE Screen, Priority Medium
         } else {
             // Only show one (generated) column with combined first + last name
-            if (customerTable.getColumnGenerator("name") == null) {
-                customerTable.addGeneratedColumn("name",
+            /*
+            Only needed if Custom Fields (computed on behalf of other fields, are needed for display)
+            if (fieldTable.getColumnGenerator("Display") == null) {
+                fieldTable.addGeneratedColumn("name",
                         new Table.ColumnGenerator() {
                             @Override
                             public Object generateCell(Table table, Object o,
-                                                       Object o2) {
+                                    Object o2) {
                                 Customer c = (Customer) o;
                                 return c.getFirstName() + " " + c.getLastName();
                             }
                         });
-            }
+            }*/
             if (ScreenSize.getScreenSize() == ScreenSize.MEDIUM) {
-                customerTable.setVisibleColumns("name", "email");
-                customerTable.setColumnHeaders("Name", "Email");
+                // todo: implement Medium Screen, Priority LOW
             } else {
-                customerTable.setVisibleColumns("name");
-                customerTable.setColumnHeaders("Name");
+                fieldTable.setVisibleColumns("fieldName");
+                fieldTable.setColumnHeaders("Field Name");
+                // todo: implement Remaining Screen Sizes, Priority LOW
             }
         }
     }
@@ -183,73 +187,73 @@ public class CustomerListView extends MVerticalLayout implements View {
     // In a big project, consider using separate controller/presenter
     // for improved testability. MVP is a popular pattern for large
     // Vaadin applications.
-    private void listCustomers() {
+    private void listFields() {
         // Here we just fetch data straight from the EJB.
         //
         // If you expect a huge amount of data, do proper paging,
         // or use lazy loading Vaadin Container like LazyQueryContainer
         // See: https://vaadin.com/directory#addon/lazy-query-container:vaadin
-        customerTable.setBeans(new ArrayList<>(service.findAll()));
+        fieldTable.setBeans(new ArrayList<>(service.findAll()));
     }
 
-    private void listCustomers(String filterString) {
-        customerTable.setBeans(new ArrayList<>(service.findByName(filterString)));
+    private void listFields(String filterString) {
+        fieldTable.setBeans(new ArrayList<>(service.findByName(filterString)));
     }
 
-    void editCustomer(Customer customer) {
-        if (customer != null) {
-            openEditor(customer);
+    void editField(Field field) {
+        if (field != null) {
+            openEditor(field);
         } else {
             closeEditor();
         }
     }
 
-    void addCustomer() {
-        openEditor(new Customer());
+    void addField() {
+        openEditor(new Field());
     }
 
-    private void openEditor(Customer customer) {
-        customerEditor.setEntity(customer);
+    private void openEditor(Field field) {
+        fieldEditor.setEntity(field);
         // display next to table on desktop class screens
         if (ScreenSize.getScreenSize() == ScreenSize.LARGE) {
-            mainContent.addComponent(customerEditor);
-            customerEditor.focusFirst();
+            mainContent.addComponent(fieldEditor);
+            fieldEditor.focusFirst();
         } else {
             // Replace this view with the editor in smaller devices
             AppUI.get().getContentLayout().
-                    replaceComponent(this, customerEditor);
+                    replaceComponent(this, fieldEditor);
         }
     }
 
     private void closeEditor() {
         // As we display the editor differently in different devices,
         // close properly in each modes
-        if (customerEditor.getParent() == mainContent) {
-            mainContent.removeComponent(customerEditor);
+        if (fieldEditor.getParent() == mainContent) {
+            mainContent.removeComponent(fieldEditor);
         } else {
             AppUI.get().getContentLayout().
-                    replaceComponent(customerEditor, this);
+                    replaceComponent(fieldEditor, this);
         }
     }
 
     /* These methods gets called by the CDI event system, which is also
      * available for Vaadin UIs when using Vaadin CDI add-on. In this
-     * example events are arised from CustomerForm. The CDI event system
+     * example events are arised from FieldForm. The CDI event system
      * is a great mechanism to decouple components.
      */
-    void saveCustomer(@Observes @CustomerEvent(Type.SAVE) Customer customer) {
-        listCustomers();
+    void saveField(@Observes @FieldEvent(Type.SAVE) Field field) {
+        listFields();
         closeEditor();
     }
 
-    void resetCustomer(@Observes @CustomerEvent(Type.REFRESH) Customer customer) {
-        listCustomers();
+    void resetField(@Observes @FieldEvent(Type.REFRESH) Field field) {
+        listFields();
         closeEditor();
     }
 
-    void deleteCustomer(@Observes @CustomerEvent(Type.DELETE) Customer customer) {
+    void deleteField(@Observes @FieldEvent(Type.DELETE) Field field) {
         closeEditor();
-        listCustomers();
+        listFields();
     }
 
     @Override

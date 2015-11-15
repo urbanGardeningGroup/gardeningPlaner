@@ -1,30 +1,25 @@
 package org.vaadin.presentation.views;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import org.vaadin.backend.domain.Customer;
-import org.vaadin.addon.leaflet.LMap;
-import org.vaadin.addon.leaflet.LMarker;
-import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
-import org.vaadin.addon.leaflet.LeafletClickEvent;
-import org.vaadin.addon.leaflet.LeafletClickListener;
-import org.vaadin.addon.leaflet.control.LZoom;
-import org.vaadin.addon.leaflet.shared.ControlPosition;
-import org.vaadin.backend.CustomerService;
-import org.vaadin.cdiviewmenu.ViewMenuItem;
-import org.vaadin.viritin.label.Header;
-import org.vaadin.viritin.layouts.MVerticalLayout;
-
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Notification;
+import org.vaadin.addon.leaflet.*;
+import org.vaadin.addon.leaflet.control.LZoom;
+import org.vaadin.addon.leaflet.shared.ControlPosition;
+import org.vaadin.backend.CustomerService;
+import org.vaadin.backend.domain.Customer;
+import org.vaadin.cdiviewmenu.ViewMenuItem;
+import org.vaadin.viritin.label.Header;
+import org.vaadin.viritin.layouts.MVerticalLayout;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 @CDIView("map")
-@ViewMenuItem(icon = FontAwesome.GLOBE, order = 1)
+@ViewMenuItem(icon = FontAwesome.GLOBE, order = 4)
 public class MapView extends MVerticalLayout implements View {
 
     @Inject
@@ -51,18 +46,18 @@ public class MapView extends MVerticalLayout implements View {
         osm.setDetectRetina(true);
         worldMap.addComponent(osm);
         for (final Customer customer : service.findAll()) {
-            if(customer.getLocation() != null) {
+            if (customer.getLocation() != null) {
                 LMarker marker = new LMarker(customer.getLocation());
                 marker.addClickListener(new LeafletClickListener() {
                     @Override
                     public void onClick(LeafletClickEvent event) {
                         Notification.show(
                                 "Customer: " + customer.getFirstName() + " " + customer.
-                                getLastName());
+                                        getLastName());
                     }
                 });
                 worldMap.addComponent(marker);
-           }
+            }
         }
         worldMap.zoomToContent();
     }

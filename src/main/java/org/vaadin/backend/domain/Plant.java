@@ -4,19 +4,18 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@NamedQueries({    @NamedQuery(
+@NamedQueries({@NamedQuery(
         name = "Plant.findAll",
         query = "SELECT p FROM Plant p"
 )})
 @Entity
-@MappedSuperclass
 public class Plant extends TimestampedEntity implements Serializable {
 
     @Version
     int version;
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private PlantStatus status;
     private double height;
 
@@ -27,14 +26,12 @@ public class Plant extends TimestampedEntity implements Serializable {
     @ManyToMany(mappedBy = "threatenedPlants")
     private List<Pest> pests;
 
-    public void setId(Long id)
-    {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
-    public Long getId()
-    {
-        return id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public PlantStatus getStatus() {
@@ -77,5 +74,7 @@ public class Plant extends TimestampedEntity implements Serializable {
         this.pests = pests;
     }
 
-
+    public boolean isPersisted() {
+        return id > 0;
+    }
 }

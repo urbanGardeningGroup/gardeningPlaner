@@ -1,4 +1,4 @@
-package org.vaadin.presentation.views;
+package org.vaadin.presentation.events;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Qualifier
 @Retention(RUNTIME)
-@Target({FIELD,PARAMETER})
-public abstract @interface CustomerEvent {
-    
+@Target({FIELD, PARAMETER})
+public abstract @interface CommentEvent {
+
     Type value();
 
     public enum Type {

@@ -12,30 +12,27 @@ import java.util.Date;
  * A standard JPA entity, like in any other Java application.
  */
 @NamedQueries({
-        @NamedQuery(name="Customer.findAll",
-                query="SELECT c FROM Customer c"),
-        @NamedQuery(name="Customer.findByName",
-                query="SELECT c FROM Customer c WHERE LOWER(c.firstName) LIKE :filter OR LOWER(c.lastName) LIKE :filter"),
+        @NamedQuery(name = "Customer.findAll",
+                query = "SELECT c FROM Customer c"),
+        @NamedQuery(name = "Customer.findByName",
+                query = "SELECT c FROM Customer c WHERE LOWER(c.firstName) LIKE :filter OR LOWER(c.lastName) LIKE :filter"),
 })
 @Entity
 public class Customer implements Serializable {
 
+    @Version
+    int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Version
-    int version;
-
     private String firstName;
-
     private String lastName;
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date birthDate;
 
     private CustomerStatus status;
-
     private Gender gender;
 
     @NotNull(message = "Email is required")
@@ -151,12 +148,12 @@ public class Customer implements Serializable {
         this.gender = gender;
     }
 
-    public void setLocation(Point location) {
-        this.location = location;
-    }
-
     public Point getLocation() {
         return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public boolean isPersisted() {

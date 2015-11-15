@@ -7,15 +7,18 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
-import org.vaadin.backend.CustomerService;
-import org.vaadin.backend.domain.Customer;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import org.vaadin.backend.GardenService;
+import org.vaadin.backend.domain.Garden;
 import org.vaadin.cdiviewmenu.ViewMenuItem;
 import org.vaadin.presentation.AppUI;
 import org.vaadin.presentation.ScreenSize;
-import org.vaadin.presentation.events.CustomerEvent;
-import org.vaadin.presentation.events.CustomerEvent.Type;
-import org.vaadin.presentation.views.forms.CustomerForm;
+import org.vaadin.presentation.events.GardenEvent;
+import org.vaadin.presentation.events.GardenEvent.Type;
+import org.vaadin.presentation.views.forms.GardenForm;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.fields.MTable;
 import org.vaadin.viritin.fields.MValueChangeEvent;
@@ -30,45 +33,45 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 /**
- * A view that lists Customers in a Table and lets user to choose one for
+ * A view that lists Gardens in a Table and lets user to choose one for
  * editing. There is also RIA features like on the fly filtering.
  */
-@CDIView("customers")
-@ViewMenuItem(icon = FontAwesome.USERS)
-public class CustomerListView extends MVerticalLayout implements View {
+@CDIView("garden")
+@ViewMenuItem(icon = FontAwesome.HEART_O, order = 1)
+public class GardenView extends MVerticalLayout implements View {
 
     @Inject
-    CustomerForm customerEditor;
+    GardenForm gardenEditor;
     // Introduce and configure some UI components used on this view
-    MTable<Customer> customerTable = new MTable(Customer.class).withFullWidth().
+    MTable<Garden> gardenTable = new MTable(Garden.class).withFullWidth().
             withFullHeight();
-    MHorizontalLayout mainContent = new MHorizontalLayout(customerTable).
+    MHorizontalLayout mainContent = new MHorizontalLayout(gardenTable).
             withFullWidth().withMargin(false);
     TextField filter = new TextField();
-    Header header = new Header("Customers").setHeaderLevel(2);
+    Header header = new Header("Gardens").setHeaderLevel(2);
     Button addButton = new MButton(FontAwesome.EDIT,
             new Button.ClickListener() {
 
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
-                    addCustomer();
+                    addGarden();
                 }
             });
     @Inject
-    private CustomerService service;
+    private GardenService service;
 
     @PostConstruct
     public void init() {
 
         /*
-         * Add value change listener to table that opens the selected customer into
+         * Add value change listener to table that opens the selected Gardens into
          * an editor.
          */
-        customerTable.addMValueChangeListener(new MValueChangeListener<Customer>() {
+        gardenTable.addMValueChangeListener(new MValueChangeListener<Garden>() {
 
             @Override
-            public void valueChange(MValueChangeEvent<Customer> event) {
-                editCustomer(event.getValue());
+            public void valueChange(MValueChangeEvent<Garden> event) {
+                editGarden(event.getValue());
             }
         });
 
@@ -78,11 +81,11 @@ public class CustomerListView extends MVerticalLayout implements View {
          * events are sent to the server when e.g. user holds a tiny pause
          * while typing or hits enter.
          * */
-        filter.setInputPrompt("Filter customers...");
+        filter.setInputPrompt("Filter Gardens...");
         filter.addTextChangeListener(new FieldEvents.TextChangeListener() {
             @Override
             public void textChange(FieldEvents.TextChangeEvent textChangeEvent) {
-                listCustomers(textChangeEvent.getText());
+                listGardens(textChangeEvent.getText());
             }
         });
 
@@ -105,7 +108,7 @@ public class CustomerListView extends MVerticalLayout implements View {
                     }
                 });
 
-        listCustomers();
+        listGardens();
     }
 
     /**
@@ -150,29 +153,31 @@ public class CustomerListView extends MVerticalLayout implements View {
      */
     private void adjustTableColumns() {
         if (ScreenSize.getScreenSize() == ScreenSize.LARGE) {
-            customerTable.setVisibleColumns("firstName", "lastName", "email",
-                    "status");
-            customerTable.setColumnHeaders("First name", "Last name", "Email",
-                    "Status");
+            gardenTable.setVisibleColumns("gardenName", "gardenShortName", "gardenType",
+                    "climate");
+            gardenTable.setColumnHeaders("Garden Name", "Short name", "Garden Type",
+                    "Climate");
         } else {
             // Only show one (generated) column with combined first + last name
-            if (customerTable.getColumnGenerator("name") == null) {
-                customerTable.addGeneratedColumn("name",
+            /*
+            Only needed if Custom Fields (computed on behalf of other fields, are needed for display)
+            if (fieldTable.getColumnGenerator("Display") == null) {
+                fieldTable.addGeneratedColumn("name",
                         new Table.ColumnGenerator() {
                             @Override
                             public Object generateCell(Table table, Object o,
-                                                       Object o2) {
+                                    Object o2) {
                                 Customer c = (Customer) o;
                                 return c.getFirstName() + " " + c.getLastName();
                             }
                         });
-            }
+            }*/
             if (ScreenSize.getScreenSize() == ScreenSize.MEDIUM) {
-                customerTable.setVisibleColumns("name", "email");
-                customerTable.setColumnHeaders("Name", "Email");
+                gardenTable.setVisibleColumns("gardenShortName", "gardenType", "climate");
+                gardenTable.setColumnHeaders("Short Name", "Garden Type", "Climate");
             } else {
-                customerTable.setVisibleColumns("name");
-                customerTable.setColumnHeaders("Name");
+                gardenTable.setVisibleColumns("gardenShortName", "gardenType");
+                gardenTable.setColumnHeaders("Short Name", "Garden Type");
             }
         }
     }
@@ -183,73 +188,73 @@ public class CustomerListView extends MVerticalLayout implements View {
     // In a big project, consider using separate controller/presenter
     // for improved testability. MVP is a popular pattern for large
     // Vaadin applications.
-    private void listCustomers() {
+    private void listGardens() {
         // Here we just fetch data straight from the EJB.
         //
         // If you expect a huge amount of data, do proper paging,
         // or use lazy loading Vaadin Container like LazyQueryContainer
         // See: https://vaadin.com/directory#addon/lazy-query-container:vaadin
-        customerTable.setBeans(new ArrayList<>(service.findAll()));
+        gardenTable.setBeans(new ArrayList<>(service.findAll()));
     }
 
-    private void listCustomers(String filterString) {
-        customerTable.setBeans(new ArrayList<>(service.findByName(filterString)));
+    private void listGardens(String filterString) {
+        gardenTable.setBeans(new ArrayList<>(service.findByName(filterString)));
     }
 
-    void editCustomer(Customer customer) {
-        if (customer != null) {
-            openEditor(customer);
+    void editGarden(Garden garden) {
+        if (garden != null) {
+            openEditor(garden);
         } else {
             closeEditor();
         }
     }
 
-    void addCustomer() {
-        openEditor(new Customer());
+    void addGarden() {
+        openEditor(new Garden());
     }
 
-    private void openEditor(Customer customer) {
-        customerEditor.setEntity(customer);
+    private void openEditor(Garden garden) {
+        gardenEditor.setEntity(garden);
         // display next to table on desktop class screens
         if (ScreenSize.getScreenSize() == ScreenSize.LARGE) {
-            mainContent.addComponent(customerEditor);
-            customerEditor.focusFirst();
+            mainContent.addComponent(gardenEditor);
+            gardenEditor.focusFirst();
         } else {
             // Replace this view with the editor in smaller devices
             AppUI.get().getContentLayout().
-                    replaceComponent(this, customerEditor);
+                    replaceComponent(this, gardenEditor);
         }
     }
 
     private void closeEditor() {
         // As we display the editor differently in different devices,
         // close properly in each modes
-        if (customerEditor.getParent() == mainContent) {
-            mainContent.removeComponent(customerEditor);
+        if (gardenEditor.getParent() == mainContent) {
+            mainContent.removeComponent(gardenEditor);
         } else {
             AppUI.get().getContentLayout().
-                    replaceComponent(customerEditor, this);
+                    replaceComponent(gardenEditor, this);
         }
     }
 
     /* These methods gets called by the CDI event system, which is also
      * available for Vaadin UIs when using Vaadin CDI add-on. In this
-     * example events are arised from CustomerForm. The CDI event system
+     * example events are arised from GardenForm. The CDI event system
      * is a great mechanism to decouple components.
      */
-    void saveCustomer(@Observes @CustomerEvent(Type.SAVE) Customer customer) {
-        listCustomers();
+    void saveGarden(@Observes @GardenEvent(Type.SAVE) Garden garden) {
+        listGardens();
         closeEditor();
     }
 
-    void resetCustomer(@Observes @CustomerEvent(Type.REFRESH) Customer customer) {
-        listCustomers();
+    void resetGarden(@Observes @GardenEvent(Type.REFRESH) Garden garden) {
+        listGardens();
         closeEditor();
     }
 
-    void deleteCustomer(@Observes @CustomerEvent(Type.DELETE) Customer customer) {
+    void deleteGarden(@Observes @GardenEvent(Type.DELETE) Garden garden) {
         closeEditor();
-        listCustomers();
+        listGardens();
     }
 
     @Override

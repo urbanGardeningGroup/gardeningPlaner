@@ -1,11 +1,9 @@
 package org.vaadin.presentation;
 
-import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.cdi.CDIUI;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import org.vaadin.cdiviewmenu.ViewMenuUI;
 

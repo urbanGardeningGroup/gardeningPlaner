@@ -48,7 +48,7 @@ public class PlantedPlantService {
     }
 
     public void resetTestData() {
-        if(!findAll().isEmpty()) {
+        if (!findAll().isEmpty()) {
             entityManager.createQuery("DELETE FROM Plant p WHERE p.id > 0").
                     executeUpdate();
         }

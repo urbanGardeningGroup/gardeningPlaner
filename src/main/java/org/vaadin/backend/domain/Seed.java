@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * Created by synto on 11.11.2015.
  */
-@NamedQueries({    @NamedQuery(
+@NamedQueries({@NamedQuery(
         name = "Seed.findAll",
         query = "SELECT s FROM Seed s"
 )})
@@ -14,19 +14,21 @@ import java.io.Serializable;
 public class Seed extends TimestampedEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     @OneToOne(mappedBy = "seed", cascade = CascadeType.ALL)
     private Plant plant;
 
-    public void setId(Long id)
-    {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
         this.id = id;
     }
 
-    public long getId()
-    {
-        return id;
+    public boolean isPersisted() {
+        return id > 0;
     }
 
 }

@@ -1,19 +1,12 @@
 package org.vaadin.backend;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.vaadin.backend.domain.Customer;
-import org.vaadin.backend.domain.CustomerStatus;
-import org.vaadin.backend.domain.Gender;
 import org.vaadin.backend.domain.Seed;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 @Stateless
 public class SeedService {
@@ -54,7 +47,7 @@ public class SeedService {
     }
 
     public void resetTestData() {
-        if(!findAll().isEmpty()) {
+        if (!findAll().isEmpty()) {
             entityManager.createQuery("DELETE FROM Seed s WHERE s.id > 0").
                     executeUpdate();
         }

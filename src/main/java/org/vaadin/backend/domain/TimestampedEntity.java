@@ -35,8 +35,7 @@ public abstract class TimestampedEntity {
     }
 
     /**
-     * @param updatedAt
-     *            the updatedAt to set
+     * @param updatedAt the updatedAt to set
      */
     void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
@@ -51,8 +50,7 @@ public abstract class TimestampedEntity {
     }
 
     /**
-     * @param createdAt
-     *            the createdAt to set
+     * @param createdAt the createdAt to set
      */
     void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;

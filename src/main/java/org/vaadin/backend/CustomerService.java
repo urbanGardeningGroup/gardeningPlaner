@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 @Stateless
-public class  CustomerService {
+public class CustomerService {
 
     @PersistenceContext(unitName = "customer-pu")
     private EntityManager entityManager;
@@ -90,7 +90,7 @@ public class  CustomerService {
     }
 
     public void resetTestData() {
-        if(!findAll().isEmpty()) {
+        if (!findAll().isEmpty()) {
             entityManager.createQuery("DELETE FROM Customer c WHERE c.id > 0").
                     executeUpdate();
         }

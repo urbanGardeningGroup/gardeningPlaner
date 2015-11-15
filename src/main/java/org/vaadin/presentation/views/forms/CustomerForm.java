@@ -1,4 +1,4 @@
-package org.vaadin.presentation.views;
+package org.vaadin.presentation.views.forms;
 
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -6,6 +6,7 @@ import org.vaadin.backend.CustomerService;
 import org.vaadin.backend.domain.Customer;
 import org.vaadin.backend.domain.CustomerStatus;
 import org.vaadin.backend.domain.Gender;
+import org.vaadin.presentation.events.CustomerEvent;
 import org.vaadin.viritin.fields.MTextField;
 import org.vaadin.viritin.fields.TypedSelect;
 import org.vaadin.viritin.form.AbstractForm;
@@ -46,6 +47,19 @@ public class CustomerForm extends AbstractForm<Customer> {
             withCaption("Status");
     OptionGroup gender = new OptionGroup("Gender");
     TextField email = new MTextField("Email").withFullWidth();
+    /* "CDI interface" to notify decoupled components. Using traditional API to
+     * other componets would probably be easier in small apps, but just
+     * demonstrating here how all CDI stuff is available for Vaadin apps.
+     */
+    @Inject
+    @CustomerEvent(CustomerEvent.Type.SAVE)
+    javax.enterprise.event.Event<Customer> saveEvent;
+    @Inject
+    @CustomerEvent(CustomerEvent.Type.REFRESH)
+    javax.enterprise.event.Event<Customer> refrehsEvent;
+    @Inject
+    @CustomerEvent(CustomerEvent.Type.DELETE)
+    javax.enterprise.event.Event<Customer> deleteEvent;
 
     @Override
     protected Component createContent() {
@@ -85,11 +99,11 @@ public class CustomerForm extends AbstractForm<Customer> {
                     saveEvent.fire(entity);
                 } catch (EJBException e) {
                     /*
-                     * The Customer object uses optimitic locking with the 
+                     * The Customer object uses optimitic locking with the
                      * version field. Notify user the editing didn't succeed.
                      */
                     Notification.show("The customer was concurrently edited "
-                            + "by someone else. Your changes were discarded.",
+                                    + "by someone else. Your changes were discarded.",
                             Notification.Type.ERROR_MESSAGE);
                     refrehsEvent.fire(entity);
                 }
@@ -117,20 +131,4 @@ public class CustomerForm extends AbstractForm<Customer> {
         getResetButton().setEnabled(true);
         getDeleteButton().setEnabled(getEntity() != null && getEntity().isPersisted());
     }
-
-    /* "CDI interface" to notify decoupled components. Using traditional API to
-     * other componets would probably be easier in small apps, but just
-     * demonstrating here how all CDI stuff is available for Vaadin apps.
-     */
-    @Inject
-    @CustomerEvent(CustomerEvent.Type.SAVE)
-    javax.enterprise.event.Event<Customer> saveEvent;
-
-    @Inject
-    @CustomerEvent(CustomerEvent.Type.REFRESH)
-    javax.enterprise.event.Event<Customer> refrehsEvent;
-
-    @Inject
-    @CustomerEvent(CustomerEvent.Type.DELETE)
-    javax.enterprise.event.Event<Customer> deleteEvent;
 }
