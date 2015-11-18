@@ -21,8 +21,6 @@ public class Plant extends TimestampedEntity implements Serializable {
 
     @OneToOne()
     private Seed seed;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Field field;
     @ManyToMany(mappedBy = "threatenedPlants")
     private List<Pest> pests;
 
@@ -56,14 +54,6 @@ public class Plant extends TimestampedEntity implements Serializable {
 
     public void setSeed(Seed seed) {
         this.seed = seed;
-    }
-
-    public Field getField() {
-        return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
     }
 
     public List<Pest> getPests() {

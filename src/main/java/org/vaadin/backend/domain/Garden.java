@@ -16,15 +16,15 @@ public class Garden extends TimestampedEntity implements Serializable {
     int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private int id;
 
     @NotNull(message = "A Garden Name is required")
     private String gardenName;
     private String gardenShortName;
 
-    //@Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private GardenType gardenType;
-    //@Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Climate climate;
     @OneToMany(mappedBy = "garden", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Field> fields;
@@ -34,11 +34,11 @@ public class Garden extends TimestampedEntity implements Serializable {
     @ManyToMany(mappedBy = "supportedGarden", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<User> supporters;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

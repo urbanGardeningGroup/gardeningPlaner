@@ -1,6 +1,8 @@
 package org.vaadin.backend;
 
 import org.vaadin.backend.domain.Field;
+import org.vaadin.backend.domain.Garden;
+import org.vaadin.backend.domain.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -37,11 +39,11 @@ public class FieldService {
         return entityManager.createQuery(cq).getResultList();
     }
 
-    public List<Field> findByGardenID() {
-        // todo: Build ID Access via new Pattern
+    public List<Field> findAllByGarden(Garden garden) {
         CriteriaQuery<Field> cq = entityManager.getCriteriaBuilder().
                 createQuery(Field.class);
         cq.select(cq.from(Field.class));
+        //todo: write by gardne select cq.where(cq.
         return entityManager.createQuery(cq).getResultList();
     }
 

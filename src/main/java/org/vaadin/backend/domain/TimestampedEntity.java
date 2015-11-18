@@ -1,10 +1,8 @@
 package org.vaadin.backend.domain;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -12,32 +10,34 @@ import java.util.Date;
  * Created by synto on 11.11.2015.
  */
 @MappedSuperclass
-public abstract class TimestampedEntity {
+public abstract class TimestampedEntity implements Serializable {
     /**
      * Update date
      */
+    @Basic(optional = false)
     @Column(name = "updatedAt", insertable = false, updatable = true)
-    @NotNull
-    private Timestamp updatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
     /**
      * Creation date
      */
+    @Basic(optional = false)
     @Column(name = "createdAt", insertable = true, updatable = false)
-    @NotNull
-    private Timestamp createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     /**
      * @return the updatedAt
      */
 
-    Timestamp getUpdatedAt() {
+    Date getUpdatedAt() {
         return updatedAt;
     }
 
     /**
      * @param updatedAt the updatedAt to set
      */
-    void setUpdatedAt(Timestamp updatedAt) {
+    void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -45,24 +45,24 @@ public abstract class TimestampedEntity {
      * @return the createdAt
      */
 
-    Timestamp getCreatedAt() {
+    Date getCreatedAt() {
         return createdAt;
     }
 
     /**
      * @param createdAt the createdAt to set
      */
-    void setCreatedAt(Timestamp createdAt) {
+    void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @PrePersist
-    void onCreate() {
-        this.setCreatedAt(new Timestamp((new Date()).getTime()));
+    protected void onCreate() {
+        this.setCreatedAt((new Date()));
     }
 
     @PreUpdate
-    void onPersist() {
-        this.setUpdatedAt(new Timestamp((new Date()).getTime()));
+    protected void onPersist() {
+        this.setUpdatedAt(new Date());
     }
 }

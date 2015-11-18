@@ -16,6 +16,11 @@ public class PlantedPlant extends Plant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long plantedPlant_id;
+
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Field field;
+
     @OneToOne(fetch = FetchType.EAGER)
     private PlantedPlant nextNodeRight;
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "nextNodeRight")
@@ -33,6 +38,14 @@ public class PlantedPlant extends Plant implements Serializable {
     @Override
     public void setId(long id) {
         plantedPlant_id = id;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
 

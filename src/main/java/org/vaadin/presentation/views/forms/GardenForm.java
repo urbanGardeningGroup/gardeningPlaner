@@ -1,10 +1,8 @@
 package org.vaadin.presentation.views.forms;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.vaadin.backend.FieldService;
 import org.vaadin.backend.GardenService;
 import org.vaadin.backend.domain.Climate;
 import org.vaadin.backend.domain.Garden;
@@ -12,6 +10,7 @@ import org.vaadin.backend.domain.GardenStatus;
 import org.vaadin.backend.domain.GardenType;
 import org.vaadin.presentation.events.GardenEvent;
 import org.vaadin.viritin.fields.MTextField;
+import org.vaadin.viritin.fields.MultiSelectTable;
 import org.vaadin.viritin.fields.TypedSelect;
 import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.label.Header;
@@ -22,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * A UI component built to modify garden entities. The used superclass
@@ -39,7 +39,9 @@ import javax.inject.Inject;
 public class GardenForm extends AbstractForm<Garden> {
 
     @Inject
-    GardenService service;
+    GardenService gardenService;
+    @Inject
+    FieldService fieldService;
 
     // Prepare some basic field components that our bound to entity property
     // by naming convetion, you can also use PropertyId annotation
@@ -49,6 +51,7 @@ public class GardenForm extends AbstractForm<Garden> {
     TypedSelect<GardenStatus> status = new TypedSelect().withCaption("Status");
     TypedSelect<GardenType> gardenType = new TypedSelect().withCaption("GardenType");
     OptionGroup climate = new OptionGroup("Climate");
+    TwinColSelect selectFields = new TwinColSelect();
     /* "CDI interface" to notify decoupled components. Using traditional API to
      * other componets would probably be easier in small apps, but just
      * demonstrating here how all CDI stuff is available for Vaadin apps.
@@ -96,7 +99,7 @@ public class GardenForm extends AbstractForm<Garden> {
             public void onSave(Garden entity) {
                 try {
                     // make EJB call to save the entity
-                    service.saveOrPersist(entity);
+                    gardenService.saveOrPersist(entity);
                     // fire save event to let other UI components know about
                     // the change
                     saveEvent.fire(entity);
@@ -122,7 +125,7 @@ public class GardenForm extends AbstractForm<Garden> {
         setDeleteHandler(new DeleteHandler<Garden>() {
             @Override
             public void onDelete(Garden entity) {
-                service.deleteEntity(getEntity());
+                gardenService.deleteEntity(getEntity());
                 deleteEvent.fire(getEntity());
             }
         });

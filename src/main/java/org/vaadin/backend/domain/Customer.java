@@ -32,6 +32,7 @@ public class Customer implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date birthDate;
 
+    @Enumerated(EnumType.STRING)
     private CustomerStatus status;
     private Gender gender;
 

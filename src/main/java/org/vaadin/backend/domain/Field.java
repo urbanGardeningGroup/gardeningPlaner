@@ -26,10 +26,13 @@ public class Field extends TimestampedEntity implements Serializable {
 
     private Point position;
 
-   /* @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "field")
-    private List<Plant> plants;
+    @Enumerated(EnumType.STRING)
+    private FieldType fieldType;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "field")
+    private List<PlantedPlant> plantedPlants;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Garden garden;*/
+    private Garden garden;
 
     public long getId() {
         return id;
@@ -47,6 +50,13 @@ public class Field extends TimestampedEntity implements Serializable {
         this.size = size;
     }
 
+    public List<PlantedPlant> getPlantedPlants() {
+        return plantedPlants;
+    }
+
+    public void setPlantedPlants(List<PlantedPlant> plantedPlants) {
+        this.plantedPlants = plantedPlants;
+    }
 
     public boolean isPersisted() {
         return id > 0;
@@ -68,19 +78,11 @@ public class Field extends TimestampedEntity implements Serializable {
         this.position = position;
     }
 
-/*    public List<Plant> getPlants() {
-        return plants;
-    }
-
-    public void setPlants(List<Plant> plants) {
-        this.plants = plants;
-    }
-
     public Garden getGarden() {
         return garden;
     }
 
     public void setGarden(Garden garden) {
         this.garden = garden;
-    }*/
+    }
 }

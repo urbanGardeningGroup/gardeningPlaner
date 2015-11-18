@@ -3,6 +3,50 @@
              xmlns="http://java.sun.com/xml/ns/persistence"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
+    <persistence-unit name="social-input-blu" transaction-type="JTA">
+        <jta-data-source>jdbc/vaadindb</jta-data-source>
+        <class>org.vaadin.backend.domain.Forum</class>
+        <class>org.vaadin.backend.domain.Comment</class>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <!-- This is needed until jpa 2.1 support in bluemix -->
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+            <property name="openjpa.TransactionMode" value="managed"/>
+            <property name="openjpa.ConnectionFactoryMode" value="managed"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="add-sample-garden-blu" transaction-type="JTA">
+        <jta-data-source>jdbc/vaadindb</jta-data-source>
+        <class>org.vaadin.backend.domain.User</class>
+        <class>org.vaadin.backend.domain.Garden</class>
+        <class>org.vaadin.backend.domain.Field</class>
+        <class>org.vaadin.backend.domain.PlantedPlant</class>
+
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <!-- This is needed until jpa 2.1 support in bluemix -->
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+            <property name="openjpa.TransactionMode" value="managed"/>
+            <property name="openjpa.ConnectionFactoryMode" value="managed"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="root-data-blu" transaction-type="JTA">
+        <jta-data-source>jdbc/vaadindb</jta-data-source>
+        <class>org.vaadin.backend.domain.Plant</class>
+        <class>org.vaadin.backend.domain.Pest</class>
+        <class>org.vaadin.backend.domain.PestControl</class>
+
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <!-- This is needed until jpa 2.1 support in bluemix -->
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+            <property name="openjpa.TransactionMode" value="managed"/>
+            <property name="openjpa.ConnectionFactoryMode" value="managed"/>
+        </properties>
+    </persistence-unit>
+
     <persistence-unit name="customer-pu" transaction-type="JTA">
         <jta-data-source>jdbc/vaadindb</jta-data-source>
         <class>org.vaadin.backend.domain.Customer</class>
